@@ -2,6 +2,16 @@
 const key = (q, r) => `${q},${r}`;
 const other = side => side === "player" ? "enemy" : "player";
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const offsetToAxial = (col, row) => ({ q: col, r: row - Math.floor(col / 2) });
+function getMapCoordinates(map = CONFIG.map) {
+  const cells = [];
+  for (let col = 0; col < map.cols; col++) {
+    for (let row = 0; row < map.rows; row++) {
+      cells.push(map.shape === "offsetRectangle" ? offsetToAxial(col, row) : { q: col, r: row });
+    }
+  }
+  return cells;
+}
 
 // ===== 六边形工具 HexUtils =====
 const HexUtils = {
@@ -32,7 +42,7 @@ class Game {
   reset() {
     this.renderer.reset(); this.phase = "prepare"; this.prepareLeft = CONFIG.battle.prepareTime; this.timeLeft = CONFIG.battle.duration; this.mapVersion = 1; this.nextId = 1; this.tiles = new Map(); this.buildings = []; this.units = []; this.selectedTile = null; this.aiClock = 0;
     this.sides = {}; for (const side of SIDES) this.sides[side] = { gold: CONFIG.economy.startGold, goldEarned: 0, unitKills: 0, buildingsDestroyed: 0, captures: 0, generalRevive: null };
-    for (let q = 0; q < CONFIG.map.cols; q++) for (let r = 0; r < CONFIG.map.rows; r++) this.tiles.set(key(q, r), { q, r, revealed: false, owner: "none", building: null, capture: { side: null, progress: 0 } });
+    for (const { q, r } of getMapCoordinates()) this.tiles.set(key(q, r), { q, r, revealed: false, owner: "none", building: null, capture: { side: null, progress: 0 } });
     const layout = CONFIG.map.initialLayout;
     this.setupSide("player", layout.playerCity, layout.playerTerritory); this.setupSide("enemy", layout.enemyCity, layout.enemyTerritory); this.renderer.buildMap(this); this.ui.reset(); this.ui.update(this); this.renderer.resize();
   }
@@ -108,7 +118,7 @@ class UIController {
   closeBuild() { this.el.menu.classList.remove("open"); }
   openMapSelect(canClose) { this.closeBuild(); this.mapResumePhase = canClose ? game.phase : null; game.phase = "menu"; this.el.mapClose.classList.toggle("show", canClose); this.renderMapChoices(); this.el.mapSelect.classList.add("show"); }
   closeMapSelect() { if (!this.mapResumePhase) return; game.phase = this.mapResumePhase; this.mapResumePhase = null; this.el.mapSelect.classList.remove("show"); }
-  renderMapChoices() { this.el.mapGrid.innerHTML = ""; for (const map of Object.values(CONFIG.maps)) { const card = document.createElement("button"); card.className = `map-card${map.id === game.currentMapId ? " active" : ""}`; card.style.setProperty("--map-a", this.colorHex(map.colors.playerFill)); card.style.setProperty("--map-b", this.colorHex(map.colors.enemyFill)); card.innerHTML = `<h2>${map.name}</h2><p>${map.description}</p><div class="map-meta"><span>${map.cols} × ${map.rows} 地图</span><span>六边格 ${map.hexSize}px</span></div>`; card.onclick = () => { game.selectMap(map.id); this.mapResumePhase = null; this.el.mapSelect.classList.remove("show"); this.toast(`进入${map.name}`); }; this.el.mapGrid.appendChild(card); } }
+  renderMapChoices() { this.el.mapGrid.innerHTML = ""; for (const map of Object.values(CONFIG.maps)) { const card = document.createElement("button"); card.className = `map-card${map.id === game.currentMapId ? " active" : ""}`; card.style.setProperty("--map-a", this.colorHex(map.colors.playerFill)); card.style.setProperty("--map-b", this.colorHex(map.colors.enemyFill)); const shapeName = map.shape === "offsetRectangle" ? "长方形轮廓" : "斜向轮廓"; card.innerHTML = `<h2>${map.name}</h2><p>${map.description}</p><div class="map-meta"><span>${map.cols} × ${map.rows}</span><span>${shapeName}</span><span>${map.hexSize}px</span></div>`; card.onclick = () => { game.selectMap(map.id); this.mapResumePhase = null; this.el.mapSelect.classList.remove("show"); this.toast(`进入${map.name}`); }; this.el.mapGrid.appendChild(card); } }
   colorHex(value) { return `#${value.toString(16).padStart(6, "0")}`; }
   toast(text) { clearTimeout(this.toastTimer); this.el.toast.textContent = text; this.el.toast.classList.add("show"); this.toastTimer = setTimeout(() => this.el.toast.classList.remove("show"), 1500); }
   showResult(game, winner, reason) { this.closeBuild(); this.el.result.classList.add("show"); document.querySelector("#result-title").textContent = winner === "player" ? "胜利！" : winner === "enemy" ? "失败" : "平局"; document.querySelector("#result-reason").textContent = reason; const rows = [["击杀单位", "unitKills"], ["摧毁建筑", "buildingsDestroyed"], ["成功占领", "captures"], ["当前领地", null], ["总产金币", "goldEarned"]]; document.querySelector("#stats-body").innerHTML = rows.map(([label, k]) => `<tr><td>${label}</td><td>${Math.floor(k ? game.sides.player[k] : game.territory("player"))}</td><td>${Math.floor(k ? game.sides.enemy[k] : game.territory("enemy"))}</td></tr>`).join(""); }
@@ -120,7 +130,9 @@ function validateMapConfig(map, mapId = map.id || "unknown") {
     throw new Error(`地图 ${mapId} 的 cols 和 rows 必须是大于等于 2 的整数`);
   }
   if (!Number.isFinite(map.hexSize) || map.hexSize <= 0) throw new Error(`地图 ${mapId} 的 hexSize 必须大于 0`);
+  if (!["axialParallelogram", "offsetRectangle"].includes(map.shape)) throw new Error(`地图 ${mapId} 使用了未知 shape：${map.shape}`);
   const layout = map.initialLayout;
+  const validCells = new Set(getMapCoordinates(map).map(p => key(p.q, p.r)));
   const positions = [
     ["playerCity", layout.playerCity],
     ...layout.playerTerritory.map((p, i) => [`playerTerritory[${i}]`, p]),
@@ -129,8 +141,8 @@ function validateMapConfig(map, mapId = map.id || "unknown") {
   ];
   const occupied = new Set();
   for (const [name, p] of positions) {
-    if (!Number.isInteger(p?.q) || !Number.isInteger(p?.r) || p.q < 0 || p.q >= map.cols || p.r < 0 || p.r >= map.rows) {
-      throw new Error(`地图 ${mapId} 初始坐标 ${name} (${p?.q}, ${p?.r}) 超出 ${map.cols}x${map.rows} 边界`);
+    if (!Number.isInteger(p?.q) || !Number.isInteger(p?.r) || !validCells.has(key(p.q, p.r))) {
+      throw new Error(`地图 ${mapId} 初始坐标 ${name} (${p?.q}, ${p?.r}) 不在有效地块内`);
     }
     const positionKey = key(p.q, p.r);
     if (occupied.has(positionKey)) throw new Error(`地图 ${mapId} 初始坐标重复：${name} 位于 ${positionKey}`);
