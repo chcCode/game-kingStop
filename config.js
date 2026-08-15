@@ -1,6 +1,76 @@
+// ===== 地图预设 =====
+const MAP_CONFIGS = {
+  hulao: {
+    id: "hulao",
+    name: "虎牢关",
+    description: "9x7 标准战场，攻守节奏均衡",
+    cols: 9,
+    rows: 7,
+    hexSize: 36,
+    initialLayout: {
+      playerCity: { q: 0, r: 6 },
+      playerTerritory: [{ q: 1, r: 6 }, { q: 0, r: 5 }],
+      enemyCity: { q: 8, r: 0 },
+      enemyTerritory: [{ q: 7, r: 0 }, { q: 8, r: 1 }],
+    },
+    colors: {
+      unknownFill: 0x292c2a,
+      unknownLine: 0x555957,
+      neutralFill: 0x55514a,
+      neutralLine: 0x8f897d,
+      playerFill: 0x245f49,
+      playerLine: 0x68d4a4,
+      enemyFill: 0x70352f,
+      enemyLine: 0xe36c5e,
+      captureLine: 0xf7d65c,
+    },
+    viewport: {
+      padding: 10,
+      reservedTop: 80,
+      reservedBottom: 80,
+      minHeight: 180,
+      maxScale: 1.35,
+    },
+  },
+  chibi: {
+    id: "chibi",
+    name: "赤壁水寨",
+    description: "11x7 狭长战场，探索路线更丰富",
+    cols: 11,
+    rows: 7,
+    hexSize: 32,
+    initialLayout: {
+      playerCity: { q: 0, r: 6 },
+      playerTerritory: [{ q: 1, r: 6 }, { q: 0, r: 5 }],
+      enemyCity: { q: 10, r: 0 },
+      enemyTerritory: [{ q: 9, r: 0 }, { q: 10, r: 1 }],
+    },
+    colors: {
+      unknownFill: 0x26323a,
+      unknownLine: 0x4f6874,
+      neutralFill: 0x52636a,
+      neutralLine: 0x91a5aa,
+      playerFill: 0x235e68,
+      playerLine: 0x69d4dc,
+      enemyFill: 0x74402f,
+      enemyLine: 0xee8764,
+      captureLine: 0xffd166,
+    },
+    viewport: {
+      padding: 10,
+      reservedTop: 80,
+      reservedBottom: 80,
+      minHeight: 180,
+      maxScale: 1.3,
+    },
+  },
+};
+
 // ===== 游戏配置 CONFIG =====
 const CONFIG = {
-  map: { cols: 9, rows: 7, hexSize: 36 },
+  defaultMap: "hulao",
+  maps: MAP_CONFIGS,
+  map: MAP_CONFIGS.hulao,
   economy: { startGold: 100, baseIncome: 2, goldCap: 9999, mineIncome: 5 },
   reveal: { normalCost: 25, advancedCostReserved: 250, goldReward: 50 },
   revealRates: {
@@ -57,13 +127,6 @@ const CONFIG = {
     maxArrowTowers: 2,
     emergencyCityRange: 3,
   },
-};
-
-const INITIAL_LAYOUT = {
-  playerCity: { q: 0, r: 6 },
-  playerTerritory: [{ q: 1, r: 6 }, { q: 0, r: 5 }],
-  enemyCity: { q: 8, r: 0 },
-  enemyTerritory: [{ q: 7, r: 0 }, { q: 8, r: 1 }],
 };
 
 const SIDES = ["player", "enemy"];
