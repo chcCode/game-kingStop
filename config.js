@@ -151,6 +151,39 @@ const MAP_CONFIGS = {
       maxScale: 1.25,
     },
   },
+  northSouthTall: {
+    id: "northSouthTall",
+    name: "南北长阵",
+    description: "9x16 对称纵深战场，双方沿中央纵轴南北推进",
+    shape: "offsetRectangle",
+    cols: 9,
+    rows: 16,
+    hexSize: 28,
+    initialLayout: {
+      playerCity: { q: 4, r: 13 },
+      playerTerritory: [{ q: 3, r: 14 }, { q: 5, r: 13 }],
+      enemyCity: { q: 4, r: -2 },
+      enemyTerritory: [{ q: 3, r: -1 }, { q: 5, r: -2 }],
+    },
+    colors: {
+      unknownFill: 0x2f302b,
+      unknownLine: 0x5e6253,
+      neutralFill: 0x5b5c50,
+      neutralLine: 0x9d9f8d,
+      playerFill: 0x285a4f,
+      playerLine: 0x6fd1b3,
+      enemyFill: 0x713c39,
+      enemyLine: 0xe98279,
+      captureLine: 0xf3cd61,
+    },
+    viewport: {
+      padding: 10,
+      reservedTop: 80,
+      reservedBottom: 80,
+      minHeight: 180,
+      maxScale: 1.2,
+    },
+  },
 };
 
 // ===== 游戏配置 CONFIG =====
