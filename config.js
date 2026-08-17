@@ -198,9 +198,9 @@ const CONFIG = {
   // ===== 经济 =====
   economy: {
     startGold: 100, // 每方开局金币。
-    baseIncome: 2,  // 每方无条件获得的金币/秒。
+    baseIncome: 5,  // 每方无条件获得的金币/秒。
     goldCap: 9999,  // 金币库存上限，溢出部分舍弃。
-    mineIncome: 5,  // 每座存活金矿提供的金币/秒。
+    mineIncome: 10, // 每座存活金矿提供的金币/秒。
   },
 
   // ===== 翻格 =====
@@ -233,30 +233,30 @@ const CONFIG = {
 
   // ===== 建筑 =====
   buildings: {
-    gold_mine: { name: "金矿", cost: 50, hp: 200, income: 5 },
-    barracks_spear: { name: "枪兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "spear" },
-    barracks_cavalry: { name: "骑兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "cavalry" },
-    barracks_shield: { name: "盾兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "shield" },
-    barracks_archer: { name: "弓兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "archer" },
-    tower_arrow: { name: "箭塔", cost: 60, hp: 250, atk: 15, range: 2, atkInterval: 1 },
-    tower_cannon: { name: "霹雳塔", cost: 120, hp: 250, atk: 30, range: 2.5, atkInterval: 2, aoeRadius: 1 },
-    general_camp: { name: "武将据点", cost: null, hp: 300 },
-    main_city: { name: "主城", cost: null, hp: 1000 },
+    gold_mine: { name: "金矿", cost: 50, hp: 300, income: 10 },
+    barracks_spear: { name: "枪兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "spear" },
+    barracks_cavalry: { name: "骑兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "cavalry" },
+    barracks_shield: { name: "盾兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "shield" },
+    barracks_archer: { name: "弓兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "archer" },
+    tower_arrow: { name: "箭塔", cost: 60, hp: 375, atk: 15, range: 2, atkInterval: 1 },
+    tower_cannon: { name: "霹雳塔", cost: 120, hp: 375, atk: 30, range: 2.5, atkInterval: 2, aoeRadius: 1 },
+    general_camp: { name: "武将据点", cost: null, hp: 450 },
+    main_city: { name: "主城", cost: null, hp: 2000 },
   },
 
   // ===== 普通兵种 =====
   units: {
-    spear: { name: "枪兵", hp: 80, atk: 12, speed: 1.5, atkInterval: 1, range: 0.6, counters: "cavalry", color: 0xf39c45 },
-    cavalry: { name: "骑兵", hp: 70, atk: 15, speed: 2.5, atkInterval: 1.2, range: 0.6, counters: "shield", color: 0x9b653f },
-    shield: { name: "盾兵", hp: 150, atk: 8, speed: 1, atkInterval: 1.5, range: 0.6, counters: "archer", color: 0x4e8fc9 },
-    archer: { name: "弓兵", hp: 60, atk: 14, speed: 1.5, atkInterval: 1, range: 2, counters: "spear", color: 0x65ad65 },
+    spear: { name: "枪兵", hp: 120, atk: 12, speed: 1.5, atkInterval: 1, range: 0.6, counters: "cavalry", color: 0xf39c45 },
+    cavalry: { name: "骑兵", hp: 105, atk: 15, speed: 2.5, atkInterval: 1.2, range: 0.6, counters: "shield", color: 0x9b653f },
+    shield: { name: "盾兵", hp: 225, atk: 8, speed: 1, atkInterval: 1.5, range: 0.6, counters: "archer", color: 0x4e8fc9 },
+    archer: { name: "弓兵", hp: 90, atk: 14, speed: 1.5, atkInterval: 1, range: 2, counters: "spear", color: 0x65ad65 },
   },
 
   // ===== 武将 =====
   general: {
     guanYu: {
       name: "关羽",   // UI 显示名称。
-      hp: 240,         // 最大生命。
+      hp: 360,         // 最大生命。
       atk: 36,         // 普通攻击伤害。
       speed: 1.5,      // 移速，格/秒。
       atkInterval: 1,  // 普通攻击间隔，秒。

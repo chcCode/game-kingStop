@@ -132,7 +132,7 @@ main_city
 ### 3.3 初始建筑
 
 - 玩家主城位于 `(0, 6)`，敌方主城位于 `(8, 0)`。
-- 主城初始生命值均为 1000。
+- 主城初始生命值均为 2000。
 - 主城不可出售、不可占领、不可重建；生命归零立即结束对局。
 
 ---
@@ -187,8 +187,8 @@ main_city
 
 - 玩家和 AI 各自拥有独立金币账户。
 - 双方初始金币均为 100。
-- `battle` 阶段双方基础产出均为 2 金币/秒。
-- 每座仍存活且归属己方的金矿额外提供 5 金币/秒。
+- `battle` 阶段双方基础产出均为 5 金币/秒。
+- 每座仍存活且归属己方的金矿额外提供 10 金币/秒。
 - 金币上限为 9999，超出部分舍弃。
 - 使用浮点数累计金币，HUD 显示时向下取整。
 - “总产金量”统计实际到账的基础产出、金矿产出和翻格金币奖励；因金币上限丢弃的部分不计入。
@@ -204,13 +204,13 @@ main_city
 
 | 建筑 | 费用 | 生命 | 功能 |
 |---|---:|---:|---|
-| 金矿 | 50 | 200 | 每秒额外产出 5 金币 |
-| 枪兵营 | 80 | 300 | 每 3 秒生成 1 个枪兵 |
-| 骑兵营 | 80 | 300 | 每 3 秒生成 1 个骑兵 |
-| 盾兵营 | 80 | 300 | 每 3 秒生成 1 个盾兵 |
-| 弓兵营 | 80 | 300 | 每 3 秒生成 1 个弓兵 |
-| 箭塔 | 60 | 250 | 单体伤害 15，范围 2 格，间隔 1 秒 |
-| 霹雳塔 | 120 | 250 | AOE 伤害 30，范围 2.5 格，间隔 2 秒，爆炸半径 1 格 |
+| 金矿 | 50 | 300 | 每秒额外产出 10 金币 |
+| 枪兵营 | 80 | 450 | 每 3 秒生成 1 个枪兵 |
+| 骑兵营 | 80 | 450 | 每 3 秒生成 1 个骑兵 |
+| 盾兵营 | 80 | 450 | 每 3 秒生成 1 个盾兵 |
+| 弓兵营 | 80 | 450 | 每 3 秒生成 1 个弓兵 |
+| 箭塔 | 60 | 375 | 单体伤害 15，范围 2 格，间隔 1 秒 |
+| 霹雳塔 | 120 | 375 | AOE 伤害 30，范围 2.5 格，间隔 2 秒，爆炸半径 1 格 |
 
 ### 5.3 出兵规则
 
@@ -237,10 +237,10 @@ main_city
 
 | 兵种 | 生命 | 攻击 | 移速（格/秒） | 攻击间隔 | 攻击距离 | 克制 |
 |---|---:|---:|---:|---:|---:|---|
-| 枪兵 | 80 | 12 | 1.5 | 1.0 秒 | 0.6 格 | 骑兵 |
-| 骑兵 | 70 | 15 | 2.5 | 1.2 秒 | 0.6 格 | 盾兵 |
-| 盾兵 | 150 | 8 | 1.0 | 1.5 秒 | 0.6 格 | 弓兵 |
-| 弓兵 | 60 | 14 | 1.5 | 1.0 秒 | 2.0 格 | 枪兵 |
+| 枪兵 | 120 | 12 | 1.5 | 1.0 秒 | 0.6 格 | 骑兵 |
+| 骑兵 | 105 | 15 | 2.5 | 1.2 秒 | 0.6 格 | 盾兵 |
+| 盾兵 | 225 | 8 | 1.0 | 1.5 秒 | 0.6 格 | 弓兵 |
+| 弓兵 | 90 | 14 | 1.5 | 1.0 秒 | 2.0 格 | 枪兵 |
 
 克制关系为：
 
@@ -580,9 +580,9 @@ const CONFIG = {
   },
   economy: {
     startGold: 100,
-    baseIncome: 2,
+    baseIncome: 5,
     goldCap: 9999,
-    mineIncome: 5,
+    mineIncome: 10,
   },
   reveal: {
     normalCost: 25,
@@ -609,55 +609,55 @@ const CONFIG = {
   },
   buildings: {
     gold_mine: {
-      name: "金矿", cost: 50, hp: 200, income: 5,
+      name: "金矿", cost: 50, hp: 300, income: 10,
     },
     barracks_spear: {
-      name: "枪兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "spear",
+      name: "枪兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "spear",
     },
     barracks_cavalry: {
-      name: "骑兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "cavalry",
+      name: "骑兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "cavalry",
     },
     barracks_shield: {
-      name: "盾兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "shield",
+      name: "盾兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "shield",
     },
     barracks_archer: {
-      name: "弓兵营", cost: 80, hp: 300, spawnInterval: 3, unitType: "archer",
+      name: "弓兵营", cost: 80, hp: 450, spawnInterval: 3, unitType: "archer",
     },
     tower_arrow: {
-      name: "箭塔", cost: 60, hp: 250, atk: 15, range: 2, atkInterval: 1,
+      name: "箭塔", cost: 60, hp: 375, atk: 15, range: 2, atkInterval: 1,
     },
     tower_cannon: {
-      name: "霹雳塔", cost: 120, hp: 250, atk: 30, range: 2.5,
+      name: "霹雳塔", cost: 120, hp: 375, atk: 30, range: 2.5,
       atkInterval: 2, aoeRadius: 1,
     },
     general_camp: {
-      name: "武将据点", cost: null, hp: 300,
+      name: "武将据点", cost: null, hp: 450,
     },
     main_city: {
-      name: "主城", cost: null, hp: 1000,
+      name: "主城", cost: null, hp: 2000,
     },
   },
   units: {
     spear: {
-      name: "枪兵", hp: 80, atk: 12, speed: 1.5,
+      name: "枪兵", hp: 120, atk: 12, speed: 1.5,
       atkInterval: 1, range: 0.6, counters: "cavalry",
     },
     cavalry: {
-      name: "骑兵", hp: 70, atk: 15, speed: 2.5,
+      name: "骑兵", hp: 105, atk: 15, speed: 2.5,
       atkInterval: 1.2, range: 0.6, counters: "shield",
     },
     shield: {
-      name: "盾兵", hp: 150, atk: 8, speed: 1,
+      name: "盾兵", hp: 225, atk: 8, speed: 1,
       atkInterval: 1.5, range: 0.6, counters: "archer",
     },
     archer: {
-      name: "弓兵", hp: 60, atk: 14, speed: 1.5,
+      name: "弓兵", hp: 90, atk: 14, speed: 1.5,
       atkInterval: 1, range: 2, counters: "spear",
     },
   },
   general: {
     guanYu: {
-      name: "关羽", hp: 240, atk: 36, speed: 1.5,
+      name: "关羽", hp: 360, atk: 36, speed: 1.5,
       atkInterval: 1, range: 0.6, reviveTime: 15,
       skill: { name: "青龙偃月", damage: 50, range: 1.5, cooldown: 5 },
     },
